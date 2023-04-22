@@ -3,7 +3,7 @@
 ## Select operation
 
 ### 1757
-Recyclable and Low Fat Products
+##### Recyclable and Low Fat Products
 
 Write an SQL query to find the ids of products that are both low fat and recyclable.
 Return the result table in any order.
@@ -36,7 +36,7 @@ select product_id from Products where low_fats='Y' and recyclable='Y';
 
 
 ### 584
-Find Customer Referee
+##### Find Customer Referee
 
 Write an SQL query to report the names of the customer that are not referred by the customer with id = 2.
 Return the result table in any order.
@@ -72,7 +72,7 @@ select name from Customer where referee_id is null or referee_id !=2;
 
 
 ### 595
-Big Countries
+##### Big Countries
 
 A country is big if:
 it has an area of at least three million (i.e., 3000000 km2), or
@@ -105,3 +105,34 @@ select name, population, area from World where area>=3000000 or population>=2500
 <br>
 
 
+### 1148
+##### Article Views
+
+Write an SQL query to find all the authors that viewed at least one of their own articles.
+Return the result table sorted by id in ascending order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input: 
+Views table:
+| article_id | author_id | viewer_id | view_date  |
+|------------|-----------|-----------|------------|
+| 1          | 3         | 5         | 2019-08-01 |
+| 1          | 3         | 6         | 2019-08-02 |
+| 2          | 7         | 7         | 2019-08-01 |
+| 2          | 7         | 6         | 2019-08-02 |
+| 4          | 7         | 1         | 2019-07-22 |
+| 3          | 4         | 4         | 2019-07-21 |
+| 3          | 4         | 4         | 2019-07-21 |
+
+Output: 
+| id   |
+|------|
+| 4    |
+| 7    |
+```sql
+select distinct viewer_id as id from Views where author_id=viewer_id order by viewer_id;
+```
+<br>
