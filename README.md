@@ -273,7 +273,7 @@ From sale_id = 7, we can conclude that Apple was sold for 9000 in the year 2011.
 ```sql
 select product.product_name, sales.year, sales.price 
 from sales, product 
-where sales.product_id=product.product_id
+where sales.product_id=product.product_id;
 ```
 <br>
 
