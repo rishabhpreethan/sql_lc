@@ -29,7 +29,9 @@ Output:
 Explanation: Only products 1 and 3 are both low fat and recyclable.
 
 ```sql
-select product_id from Products where low_fats='Y' and recyclable='Y';
+select product_id 
+from Products 
+where low_fats='Y' and recyclable='Y';
 ```
 <br>
 
@@ -65,7 +67,9 @@ Output:
 
 
 ```sql
-select name from Customer where referee_id is null or referee_id !=2;
+select name 
+from Customer 
+where referee_id is null or referee_id !=2;
 ```
 <br>
 
@@ -100,7 +104,9 @@ Output:
 | Afghanistan | 25500100   | 652230  |
 | Algeria     | 37100000   | 2381741 |
 ```sql
-select name, population, area from World where area>=3000000 or population>=25000000;
+select name, population, area 
+from World 
+where area>=3000000 or population>=25000000;
 ```
 <br>
 
@@ -133,7 +139,10 @@ Output:
 | 4    |
 | 7    |
 ```sql
-select distinct viewer_id as id from Views where author_id=viewer_id order by viewer_id;
+select distinct viewer_id as id 
+from Views 
+where author_id=viewer_id 
+order by viewer_id;
 ```
 <br>
 
@@ -163,7 +172,9 @@ Explanation:
 Tweet 1 has length = 14. It is a valid tweet.
 Tweet 2 has length = 32. It is an invalid tweet.
 ```sql
-select tweet_id from Tweets where char_length(content)>15;
+select tweet_id 
+from Tweets 
+where char_length(content)>15;
 ```
 <br>
 
@@ -215,5 +226,55 @@ The unique ID of Winston is 3.
 The unique ID of Jonathan is 1.
 
 ```sql
-select employees.name,employeeuni.unique_id from employees left join employeeuni on employees.id=employeeuni.id;
+select employees.name,employeeuni.unique_id 
+from employees 
+left join employeeuni on employees.id=employeeuni.id;
 ```
+<br>
+
+
+### 1068
+##### Product Sales Analysis I
+
+Write an SQL query that reports the product_name, year, and price for each sale_id in the Sales table.
+Return the resulting table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+Input: 
+Sales table:
+| sale_id | product_id | year | quantity | price |
+|---------|------------|------|----------|-------| 
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
+
+Product table:
+
+| product_id | product_name |
+|------------|--------------|
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
+
+Output:
+| product_name | year  | price |
+|--------------|-------|-------|
+| Nokia        | 2008  | 5000  |
+| Nokia        | 2009  | 5000  |
+| Apple        | 2011  | 9000  |
+
+Explanation: 
+From sale_id = 1, we can conclude that Nokia was sold for 5000 in the year 2008.
+From sale_id = 2, we can conclude that Nokia was sold for 5000 in the year 2009.
+From sale_id = 7, we can conclude that Apple was sold for 9000 in the year 2011.
+
+```sql
+select product.product_name, sales.year, sales.price 
+from sales, product 
+where sales.product_id=product.product_id
+```
+<br>
+
+
