@@ -748,3 +748,295 @@ group by product_id;
 <br>
 
 
+## Sorting and Grouping
+
+### 596
+##### Classes More Than 5 Students
+
+Write an SQL query to report all the classes that have at least five students.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Courses table:
+| student | class    |
+|---------|----------|
+| A       | Math     |
+| B       | English  |
+| C       | Math     |
+| D       | Biology  |
+| E       | Math     |
+| F       | Computer |
+| G       | Math     |
+| H       | Math     |
+| I       | Math     |
+
+Output: 
+| class   |
+|---------|
+| Math    |
+
+Explanation: 
+- Math has 6 students, so we include it.
+- English has 1 student, so we do not include it.
+- Biology has 1 student, so we do not include it.
+- Computer has 1 student, so we do not include it.
+
+```sql
+select class 
+from Courses 
+group by class 
+having count(distinct student) >= 5;
+```
+<br>
+
+
+
+### 1070
+##### Product Sales Analysis III
+
+Write an SQL query that selects the product id, year, quantity, and price for the first year of every product sold.
+Return the resulting table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Sales table:
+| sale_id | product_id | year | quantity | price |
+|---------|------------|------|----------|-------| 
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
+
+Product table:
+| product_id | product_name |
+|------------|--------------|
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
+
+Output: 
+| product_id | first_year | quantity | price |
+|------------|------------|----------|-------| 
+| 100        | 2008       | 10       | 5000  |
+| 200        | 2011       | 15       | 9000  |
+
+```sql
+select product_id, year as first_year,quantity, price
+from sales
+where(product_id, year)
+in
+(select product_id, min(year) as year
+from sales
+group by product_id);
+```
+<br>
+
+
+
+### 2356
+##### Number Of Unique Subjects Taught By Each Teacher
+
+Write an SQL query to report the number of unique subjects each teacher teaches in the university.
+Return the result table in any order.
+The query result format is shown in the following example.
+
+
+Example 1:
+
+Input:
+
+Teacher table:
+| teacher_id | subject_id | dept_id |
+|------------|------------|---------|
+| 1          | 2          | 3       |
+| 1          | 2          | 4       |
+| 1          | 3          | 3       |
+| 2          | 1          | 1       |
+| 2          | 2          | 1       |
+| 2          | 3          | 1       |
+| 2          | 4          | 1       |
+
+Output:  
+| teacher_id | cnt |
+|------------|-----|
+| 1          | 2   |
+| 2          | 4   |
+
+Explanation: 
+Teacher 1:
+  - They teach subject 2 in departments 3 and 4.
+  - They teach subject 3 in department 3.
+Teacher 2:
+  - They teach subject 1 in department 1.
+  - They teach subject 2 in department 1.
+  - They teach subject 3 in department 1.
+  - They teach subject 4 in department 1.
+
+```sql
+select teacher_id, count(distinct(subject_id)) as cnt
+from teacher
+group by teacher_id;
+```
+<br>
+
+
+
+### 1141
+##### User Activity for the Past 30 Days I
+
+Write an SQL query to find the daily active user count for a period of 30 days ending 2019-07-27 inclusively. A user was active on someday if they made at least one activity on that day.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Activity table:
+| user_id | session_id | activity_date | activity_type |
+|---------|------------|---------------|---------------|
+| 1       | 1          | 2019-07-20    | open_session  |
+| 1       | 1          | 2019-07-20    | scroll_down   |
+| 1       | 1          | 2019-07-20    | end_session   |
+| 2       | 4          | 2019-07-20    | open_session  |
+| 2       | 4          | 2019-07-21    | send_message  |
+| 2       | 4          | 2019-07-21    | end_session   |
+| 3       | 2          | 2019-07-21    | open_session  |
+| 3       | 2          | 2019-07-21    | send_message  |
+| 3       | 2          | 2019-07-21    | end_session   |
+| 4       | 3          | 2019-06-25    | open_session  |
+| 4       | 3          | 2019-06-25    | end_session   |
+
+Output: 
+| day        | active_users |
+|------------|--------------| 
+| 2019-07-20 | 2            |
+| 2019-07-21 | 2            |
+
+Explanation: Note that we do not care about days with zero active users.
+
+```sql
+select distinct activity_date as day, count(distinct user_id) as active_users
+from activity
+where activity_date between '2019-06-28' and '2019-07-27'
+group by activity_date;
+```
+<br>
+
+
+
+### 1729
+##### Find Followers Count
+
+Write an SQL query that will, for each user, return the number of followers.
+Return the result table ordered by user_id in ascending order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Followers table:
+| user_id | follower_id |
+|---------|-------------|
+| 0       | 1           |
+| 1       | 0           |
+| 2       | 0           |
+| 2       | 1           |
+
+Output: 
+| user_id | followers_count|
+|---------|----------------|
+| 0       | 1              |
+| 1       | 1              |
+| 2       | 2              |
+
+Explanation: 
+The followers of 0 are {1}
+The followers of 1 are {0}
+The followers of 2 are {0,1}
+
+```sql
+select distinct user_id, count(follower_id) as followers_count
+from followers
+group by user_id
+order by user_id;
+```
+<br>
+
+
+
+### 619
+##### Biggest Single Number
+
+A single number is a number that appeared only once in the MyNumbers table.
+Write an SQL query to report the largest single number. If there is no single number, report null.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+MyNumbers table:
+
+| num |
++-----+
+| 8   |
+| 8   |
+| 3   |
+| 3   |
+| 1   |
+| 4   |
+| 5   |
+| 6   |
+
+Output: 
+| num |
++-----+
+| 6   |
+
+Explanation: The single numbers are 1, 4, 5, and 6.
+Since 6 is the largest single number, we return it.
+
+Example 2:
+
+Input:
+
+MyNumbers table:
+| num |
++-----+
+| 8   |
+| 8   |
+| 7   |
+| 7   |
+| 3   |
+| 3   |
+| 3   |
+
+Output: 
++------+
+| num  |
++------+
+| null |
+
+Explanation: There are no single numbers in the input table so we return null.
+
+```sql
+select max(a.num) as num
+from (select num from mynumbers group by num having count(*)=1) as a;
+```
+<br>
+
+
+
