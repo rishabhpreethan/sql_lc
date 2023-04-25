@@ -991,7 +991,7 @@ Input:
 MyNumbers table:
 
 | num |
-+-----+
+|-----|
 | 8   |
 | 8   |
 | 3   |
@@ -1003,7 +1003,7 @@ MyNumbers table:
 
 Output: 
 | num |
-+-----+
+|-----|
 | 6   |
 
 Explanation: The single numbers are 1, 4, 5, and 6.
@@ -1015,7 +1015,7 @@ Input:
 
 MyNumbers table:
 | num |
-+-----+
+|-----|
 | 8   |
 | 8   |
 | 7   |
@@ -1025,9 +1025,8 @@ MyNumbers table:
 | 3   |
 
 Output: 
-+------+
 | num  |
-+------+
+|------|
 | null |
 
 Explanation: There are no single numbers in the input table so we return null.
