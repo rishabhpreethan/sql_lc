@@ -484,5 +484,267 @@ where ifnull(bonus,0)<1000;
 <br>
 
 
+### 1280
+##### Students and Examinations
 
-### 
+Write an SQL query to find the number of times each student attended each exam.
+Return the result table ordered by student_id and subject_name.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Students table:
+| student_id | student_name |
+|------------|--------------|
+| 1          | Alice        |
+| 2          | Bob          |
+| 13         | John         |
+| 6          | Alex         |
+
+Subjects table:
+| subject_name |
+|--------------|
+| Math         |
+| Physics      |
+| Programming  |
+
+Examinations table:
+| student_id | subject_name |
+|------------|--------------|
+| 1          | Math         |
+| 1          | Physics      |
+| 1          | Programming  |
+| 2          | Programming  |
+| 1          | Physics      |
+| 1          | Math         |
+| 13         | Math         |
+| 13         | Programming  |
+| 13         | Physics      |
+| 2          | Math         |
+| 1          | Math         |
+
+Output: 
+| student_id | student_name | subject_name | attended_exams |
+|------------|--------------|--------------|----------------|
+| 1          | Alice        | Math         | 3              |
+| 1          | Alice        | Physics      | 2              |
+| 1          | Alice        | Programming  | 1              |
+| 2          | Bob          | Math         | 1              |
+| 2          | Bob          | Physics      | 0              |
+| 2          | Bob          | Programming  | 1              |
+| 6          | Alex         | Math         | 0              |
+| 6          | Alex         | Physics      | 0              |
+| 6          | Alex         | Programming  | 0              |
+| 13         | John         | Math         | 1              |
+| 13         | John         | Physics      | 1              |
+| 13         | John         | Programming  | 1              |
+
+Explanation: 
+The result table should contain all students and all subjects.
+Alice attended the Math exam 3 times, the Physics exam 2 times, and the Programming exam 1 time.
+Bob attended the Math exam 1 time, the Programming exam 1 time, and did not attend the Physics exam.
+Alex did not attend any exams.
+John attended the Math exam 1 time, the Physics exam 1 time, and the Programming exam 1 time.
+
+```sql
+select s.student_id, s.student_name,sub.subject_name, 
+count(e.student_id) as attended_exams
+from students s
+cross join subjects sub
+left join examinations e
+using (student_id, subject_name)
+group by s.student_id, sub.subject_name
+order by student_id, subject_name;
+```
+<br>
+
+
+
+### 570
+##### Managers With At Least 5 Direct Reports
+
+Write an SQL query to report the managers with at least five direct reports.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Employee table:
+| id  | name  | department | managerId |
+|-----|-------|------------|-----------|
+| 101 | John  | A          | None      |
+| 102 | Dan   | A          | 101       |
+| 103 | James | A          | 101       |
+| 104 | Amy   | A          | 101       |
+| 105 | Anne  | A          | 101       |
+| 106 | Ron   | B          | 101       |
+
+Output: 
+| name |
+|------|
+| John |
+
+```sql
+select distinct g.name as name
+from employee e join employee g
+on g.id=e.managerid
+group by g.id
+having count(*)>=5;
+```
+<br>
+
+
+
+### 1934
+##### Confirmation Rate
+
+The confirmation rate of a user is the number of 'confirmed' messages divided by the total number of requested confirmation messages. The confirmation rate of a user that did not request any confirmation messages is 0. Round the confirmation rate to two decimal places.
+
+Write an SQL query to find the confirmation rate of each user.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Signups table:
+| user_id | time_stamp          |
+|---------|---------------------|
+| 3       | 2020-03-21 10:16:13 |
+| 7       | 2020-01-04 13:57:59 |
+| 2       | 2020-07-29 23:09:44 |
+| 6       | 2020-12-09 10:39:37 |
+
+Confirmations table:
+| user_id | time_stamp          | action    |
+|---------|---------------------|-----------|
+| 3       | 2021-01-06 03:30:46 | timeout   |
+| 3       | 2021-07-14 14:00:00 | timeout   |
+| 7       | 2021-06-12 11:57:29 | confirmed |
+| 7       | 2021-06-13 12:58:28 | confirmed |
+| 7       | 2021-06-14 13:59:27 | confirmed |
+| 2       | 2021-01-22 00:00:00 | confirmed |
+| 2       | 2021-02-28 23:59:59 | timeout   |
+
+Output: 
+| user_id | confirmation_rate |
+|---------|-------------------|
+| 6       | 0.00              |
+| 3       | 0.00              |
+| 7       | 1.00              |
+| 2       | 0.50              |
+
+Explanation:
+User 6 did not request any confirmation messages. The confirmation rate is 0.
+User 3 made 2 requests and both timed out. The confirmation rate is 0.
+User 7 made 3 requests and all were confirmed. The confirmation rate is 1.
+User 2 made 2 requests where one was confirmed and the other timed out. The confirmation rate is 1 / 2 = 0.5.
+
+```sql
+select user_id,round(avg(if(action = 'confirmed', 1, 0)), 2) as confirmation_rate
+FROM Signups left join Confirmations using(user_id)
+group by 1
+order by 1;
+```
+<br>
+
+
+
+## Basic Aggregate Functions
+
+### 620
+##### Not Boring Movies
+
+Write an SQL query to report the movies with an odd-numbered ID and a description that is not "boring".
+Return the result table ordered by rating in descending order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Cinema table:
+| id | movie      | description | rating |
+|----|------------|-------------|--------|
+| 1  | War        | great 3D    | 8.9    |
+| 2  | Science    | fiction     | 8.5    |
+| 3  | irish      | boring      | 6.2    |
+| 4  | Ice song   | Fantacy     | 8.6    |
+| 5  | House card | Interesting | 9.1    |
+
+Output: 
+| id | movie      | description | rating |
+|----|------------|-------------|--------|
+| 5  | House card | Interesting | 9.1    |
+| 1  | War        | great 3D    | 8.9    |
+
+Explanation: 
+We have three movies with odd-numbered IDs: 1, 3, and 5. The movie with ID = 3 is boring so we do not include it in the answer.
+
+```sql
+select * from cinema
+where id%2!=0 and description!="boring"
+order by rating desc;
+```
+<br>
+
+
+
+### 1251
+##### Average Selling Price
+
+Write an SQL query to find the average selling price for each product. average_price should be rounded to 2 decimal places.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Prices table:
+| product_id | start_date | end_date   | price  |
+|------------|------------|------------|--------|
+| 1          | 2019-02-17 | 2019-02-28 | 5      |
+| 1          | 2019-03-01 | 2019-03-22 | 20     |
+| 2          | 2019-02-01 | 2019-02-20 | 15     |
+| 2          | 2019-02-21 | 2019-03-31 | 30     |
+
+UnitsSold table:
+| product_id | purchase_date | units |
+|------------|---------------|-------|
+| 1          | 2019-02-25    | 100   |
+| 1          | 2019-03-01    | 15    |
+| 2          | 2019-02-10    | 200   |
+| 2          | 2019-03-22    | 30    |
+
+Output: 
+| product_id | average_price |
+|------------|---------------|
+| 1          | 6.96          |
+| 2          | 16.96         |
+
+Explanation: 
+Average selling price = Total Price of Product / Number of products sold.
+Average selling price for product 1 = ((100 * 5) + (15 * 20)) / 115 = 6.96
+Average selling price for product 2 = ((200 * 15) + (30 * 30)) / 230 = 16.96
+
+```sql
+select prices.product_id, ROUND(SUM(price * units) / SUM(units), 2) as average_price
+from Prices join UnitsSold 
+on prices.product_id = unitssold.product_id
+and purchase_date between start_date and end_date
+group by product_id;
+```
+<br>
+
+
