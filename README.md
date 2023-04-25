@@ -437,6 +437,8 @@ round(sum(case when activity_type = 'start' then -1*timestamp else timestamp end
 from activity
 group by machine_id;
 ```
+<br>
+
 
 
 ### 577
@@ -453,7 +455,7 @@ Input:
 
 Employee table:
 | empId | name   | supervisor | salary |
-+-------+--------+------------+--------+
+|-------|--------|------------|--------|
 | 3     | Brad   | null       | 4000   |
 | 1     | John   | 3          | 1000   |
 | 2     | Dan    | 3          | 2000   |
@@ -461,13 +463,13 @@ Employee table:
 
 Bonus table:
 | empId | bonus |
-+-------+-------+
+|-------|-------|
 | 2     | 500   |
 | 4     | 2000  |
 
 Output: 
 | name | bonus |
-+------+-------+
+|------|-------|
 | Brad | null  |
 | John | null  |
 | Dan  | 500   |
@@ -479,3 +481,8 @@ from employee
 left join bonus on employee.empId=bonus.empId
 where ifnull(bonus,0)<1000;
 ```
+<br>
+
+
+
+### 
