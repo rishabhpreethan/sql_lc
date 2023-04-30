@@ -905,7 +905,131 @@ group by query_name;
 
 
 
+### 1193
+##### Monthly Transactions I
 
+Write an SQL query to find for each month and country, the number of transactions and their total amount, the number of approved transactions and their total amount.
+Return the result table in any order.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Transactions table:
+| id   | country | state    | amount | trans_date |
+|------|---------|----------|--------|------------|
+| 121  | US      | approved | 1000   | 2018-12-18 |
+| 122  | US      | declined | 2000   | 2018-12-19 |
+| 123  | US      | approved | 2000   | 2019-01-01 |
+| 124  | DE      | approved | 2000   | 2019-01-07 |
+
+Output: 
+| month    | country | trans_count | approved_count | trans_total_amount | approved_total_amount |
+|----------|---------|-------------|----------------|--------------------|-----------------------|
+| 2018-12  | US      | 2           | 1              | 3000               | 1000                  |
+| 2019-01  | US      | 1           | 1              | 2000               | 2000                  |
+| 2019-01  | DE      | 1           | 1              | 2000               | 2000                  |
+
+```sql
+select left(trans_date,7) as month, country, count(id) as trans_count, sum(state='approved') as approved_count, sum(amount) as trans_total_amount,
+sum(case
+when state='approved' then amount
+else 0
+end) as approved_total_amount
+from transactions
+group by month,country;
+```
+<br>
+
+
+
+### 1174
+##### Immediate Food Delivery I
+
+If the customer's preferred delivery date is the same as the order date, then the order is called immediate; otherwise, it is called scheduled.
+The first order of a customer is the order with the earliest order date that the customer made. It is guaranteed that a customer has precisely one first order.
+Write an SQL query to find the percentage of immediate orders in the first orders of all customers, rounded to 2 decimal places.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Delivery table:
+| delivery_id | customer_id | order_date | customer_pref_delivery_date |
+|-------------|-------------|------------|-----------------------------|
+| 1           | 1           | 2019-08-01 | 2019-08-02                  |
+| 2           | 2           | 2019-08-02 | 2019-08-02                  |
+| 3           | 1           | 2019-08-11 | 2019-08-12                  |
+| 4           | 3           | 2019-08-24 | 2019-08-24                  |
+| 5           | 3           | 2019-08-21 | 2019-08-22                  |
+| 6           | 2           | 2019-08-11 | 2019-08-13                  |
+| 7           | 4           | 2019-08-09 | 2019-08-09                  |
+
+Output: 
+| immediate_percentage |
+|----------------------|
+| 50.00                |
+
+Explanation: 
+The customer id 1 has a first order with delivery id 1 and it is scheduled.
+The customer id 2 has a first order with delivery id 2 and it is immediate.
+The customer id 3 has a first order with delivery id 5 and it is scheduled.
+The customer id 4 has a first order with delivery id 7 and it is immediate.
+Hence, half the customers have immediate first orders.
+
+```sql
+select round(avg(order_date=customer_pref_delivery_date)*100,2) as immediate_percentage
+from delivery where(customer_id, order_date)
+in(select customer_id,min(order_date) as first_order
+from delivery
+group by customer_id);
+```
+<br>
+
+
+
+### 550
+##### Game Play Analysis IV
+
+Write an SQL query to report the fraction of players that logged in again on the day after the day they first logged in, rounded to 2 decimal places. In other words, you need to count the number of players that logged in for at least two consecutive days starting from their first login date, then divide that number by the total number of players.
+The query result format is in the following example.
+
+
+Example 1:
+
+Input:
+
+Activity table:
+| player_id | device_id | event_date | games_played |
+|-----------|-----------|------------|--------------|
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-03-02 | 6            |
+| 2         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
+
+Output: 
+| fraction  |
+|-----------|
+| 0.33      |
+
+Explanation: 
+Only the player with id 1 logged back in after the first day he had logged in so the answer is 1/3 = 0.33
+
+```sql
+select round(count(t2.player_id)/count(t1.player_id),2) as fraction
+from 
+(select player_id,min(event_date) as first_login 
+from activity
+group by player_id)
+t1 left join activity t2
+on t1.player_id=t2.player_id and t1.first_login=t2.event_date-1;
+```
+<br>
 
 
 ## Sorting and Grouping
